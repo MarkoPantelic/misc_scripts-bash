@@ -1,0 +1,13 @@
+
+==============================================================================================================
+PING_MACHINEGUN:
+
+-255.255.240.0 should have 4094 addresses
+-when without arguments - find with ifconfig it's ip address and subnet and then ping only within that subnet
+-verbose should have an option to print on only one line (print and erase)
+-o option for output to a file 
+-r option to set range e.g 155-244 for range of ip addresses 192.168.0.155-192.168.0.244
+-instead of -r option perhaps set "master ip" and subnet mask (e.g. 192.168.0.12 and 
+255.255.255.0)
+-set to ping ipv6 addresses
+==============================================================================================================

@@ -7,3 +7,4 @@ Misc bash scripts
 ### List ###
 
 * ping_machinegun - used for device network discovery and penetration testing
+* \_1 - change terminal keyboard language

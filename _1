@@ -1,0 +1,58 @@
+#!/bin/bash
+
+#==========================================
+#
+#           CHANGE KEYBOARD LANG
+#
+#==========================================
+# requires setkbmap installed
+# Name of the script is intentionally '_1',
+# because it allows execution when using
+# cyrillic input or other ackward alphabets
+#==========================================
+
+keyboard_lang="us"
+lang_arg="us"
+
+declare -a args_arr
+
+echo "keyboard map change"
+
+
+if [ $# -gt 0 ]; then
+
+	args=$@
+	i=0;
+
+	for arg in $args; do
+		args_arr[i]=$arg
+		i=$i+1;
+	done
+	
+	lang_arg=${args_arr[0]}
+fi
+
+case "$lang_arg" in
+
+	en|us)
+		;;
+
+	sr|rs) keyboard_lang="rs(latin)"
+		;;
+
+	cir|cyr) keyboard_lang="rs(yz)"
+		;;
+
+	"") echo "setting default 'us' keyboard" 
+		;;
+	
+	*) keyboard_lang=$lang_arg
+		;;
+esac
+
+echo "setting '$keyboard_lang' keyboard lang" 
+
+setxkbmap $keyboard_lang
+
+exit $?;
+
