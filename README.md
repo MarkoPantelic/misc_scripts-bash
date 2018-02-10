@@ -6,5 +6,6 @@ Misc bash scripts
 
 ### List ###
 
-* ping_machinegun - used for device network discovery and penetration testing
+* ping_machinegun.sh- used for device network discovery and penetration testing
 * \_1 - change terminal keyboard language
+* replace_string.sh - replace stringA with stringB in a file or multiple files in a target directory
