@@ -18,4 +18,5 @@ REPLACE_STRING:
 
 -Do checking/user_question for target starting with . e.g. '.localconf' while do not do checking if it's a 
 path e.g. './local/config'
+-Add different replacing modes (e.g. mode where stringA is replaced even when it's part of a larger string) 
 ==============================================================================================================

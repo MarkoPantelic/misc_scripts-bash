@@ -14,12 +14,14 @@ oldstr=$1
 newstr=$2
 ford=$3
 target=$4
+mode=$5
 
 
 function print_usage(){
-	echo -e "Usage: $prog_name stringA stringB [fd] target"
-	echo -e "f - target is file"
-	echo -e "d - target is a directory"
+	echo -e "Usage: $prog_name stringA stringB [fd] target [mode]"
+	echo -e "\targ(3) 'f' - target is file"
+	echo -e "\targ(3) 'd' - target is a directory"
+	echo -e "\targ(5) 'test' - print lines which will be affected"
 }
 
 
@@ -59,23 +61,32 @@ fi
 
 
 
+if [[ $mode != "test" ]]; then
 
-while [[ $answer != y ]]
-do 
-	echo "$prog_name: $question"
-	read answer rest
+	while [[ $answer != y ]]
+	do 
+		echo "$prog_name: $question"
+		read answer rest
 
-	if [[ $answer == n ]]; then
-		exit 1;
-	fi
-done
+		if [[ $answer == n ]]; then
+			exit 1;
+		fi
+	done
+fi
 
 
 for file in $all_files
 do
 	if [[ -r "$dir/$file" && -f "$dir/$file" ]]; then
-		echo "done... $file"
-		sed -i "s/\b$oldstr\b/$newstr/" "$dir/$file"
+		
+		if [[ $mode == "test" ]]; then
+			echo -e "\n$file:"
+			cat "$dir/$file" | sed -n "/\b$oldstr\b/p" 
+		else
+			# NOTE: sed \b -> word boundary ( boundary chars among others are ')', '(', '*' )
+			sed -i "s/\b$oldstr\b/$newstr/g" "$dir/$file"
+			echo "done... $file"
+		fi
 	else
 		if [[ ! -d "$dir/$file" ]]; then
 			echo "$prog_name: skipping file '$file' - not readable or some other error"
