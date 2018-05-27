@@ -1,11 +1,12 @@
 #!/bin/bash
 
-#=================================================
+#============================================================
 #
-# Skript koji kreira Apache config xml stavku 
-# za 'non-ip vhost'
+# Script which creates Apache vhost entry  for 'non-ip vhost'
+# and creates /etc/hosts entry
 #
-#================================================
+# author: Marko Pantelic
+#============================================================
 
 
 CONFD=/opt/lampp/etc/extra/
@@ -17,13 +18,13 @@ XAMPPEXE=/opt/lampp/xampp
 function chkdir() 
 {
 	if [ ! -d "$1" ]; then
-		echo "Neispravna zadata putanja direktorijuma $2 - '$1'";
+		echo "Directory path invalid $2 - '$1'";
 		exit 1;
 	fi
 }
 
 
-# echo apache direktive za httpd-vhost.conf
+# echo directive for httpd-vhost.conf
 function advhost() 
 {
 echo "
@@ -46,15 +47,15 @@ function linkhost()
 
 
 if [ "$EUID" -ne 0 ]; then
-	echo "Skript se mora pokrenuti sa 'sudo' komandom";
+	echo "'$0' script must be invoked with 'sudo' privileges";
 	exit 1;
 fi
 
 
 
 if [ $# -lt 2 ]; then
-	echo "Skript zahteva dva argumenta (arg1 localhost, arg2 direktorijum):";
-	echo "Primer:";
+	echo "'$0' script requires two arguments (arg1 localhost, arg2 directory path):";
+	echo "Example:";
 	echo "./mkvhost.sh projekat1.localhost /home/backend-prepodne/Desktop/workspace.php/projekat1";
 	exit 1;
 fi
@@ -63,14 +64,14 @@ LOCALHOST=$1
 DIR=$2
 
 
-chkdir $CONFD "za konfig vhost fajl";
-chkdir $DIR "za lokaciju 'project' direktorijuma";
+chkdir $CONFD "for config vhosts file";
+chkdir $DIR "for location of 'project' directory";
 
 if [ ! -f "$CONFD$CONF" ]; then
-	echo "Neispravan naziv konfig fajla - '$CONF'";
+	echo "$0: Invalid name of config file - '$CONF'";
 	exit 1;
 elif [ ! -w "$CONFD$CONF" ]; then
-	echo "Neispravne dozvole za pisanje fajla - '$CONF'";
+	echo "$0: No permission for writing file - '$CONF'";
 	exit 1;
 fi
 
@@ -79,86 +80,90 @@ fi
 
 #main()
 
-# proveri da li vec postoji host u /etc/hosts
+# Check if there is already a hostname which is equal to the given name in /etc/hosts
 grep $LOCALHOST\$ $HOSTSF 1>/dev/null
 if [ $? -eq 0 ]; then
-	echo "NAPOMENA: za host '$LOCALHOST' već postoji linija u '$HOSTSF'"
+	echo "Warning: for host '$LOCALHOST' there is already an entry in '$HOSTSF'"
 	read trash;
-	echo "kraj skripte";
+	echo "End script";
 	exit 0;
 fi
 
-# proveri da li vec ima unos za taj direktorijum u vhost
+# Check if there is already an entry with a given directory path in vhosts file
 grep -E "$DIR\"" $CONFD$CONF 1>/dev/null
 if [ $? -eq 0 ]; then
-	echo "NAPOMENA: već postoji direktiva sa direktorijumom '$DIR' u '$CONF'"
+	echo "Warning: entry present in vhosts file for given directory path '$DIR' u '$CONF'"
 	read trash;
-	echo "kraj skripte"
+	echo "End script"
 	exit 0;
 fi
 
-echo "'ip-host' linija u '$HOSTSF' bi bila:";
+echo "'ip-host' line in '$HOSTSF' will bi set like:";
 linkhost $LOCALHOST;
 
 echo " ";
 
-echo "'Apache vhost' direktiva u '$CONFD$CONF' bi bila:";
+echo "'Apache vhost' directive '$CONFD$CONF' will be set like:";
 advhost $LOCALHOST $DIR;
 
 echo " ";
 
-echo "Ukoliko odgovaraju podešavanja, ukucaj 'da'. U suprotnom 'ne'."
+echo "If OK, enter 'yes'. Otherwise 'no'."
 
 a=0;
 while [ ! $a -eq 1 ]; do
 
-	read -p "da ili ne: " answer
+	read -p "yes or no: " answer
 
-	if [ "$answer" == "da" ]; then
+	if [ "$answer" == "yes" ]; then
 		a=1
-	elif [ "$answer" == "ne" ]; then
-		echo "kraj skripte";
+	elif [ "$answer" == "no" ]; then
+		echo "End script";
 		exit 0;
 	else
-		echo "isključivo 'da' ili 'ne'"
+		echo "Exclusively 'yes' or 'no'"
 	fi
 done
 
 
-echo "Kreiram ip-host stavku u '$HOSTSF' fajlu";
+echo "Creating ip-host entry in '$HOSTSF' file";
 linkhost $LOCALHOST >> $HOSTSF;
 
-echo "Kreiram 'vhost' stavku u '$CONFD$CONF'";
+echo "Creating 'vhost' entry in '$CONFD$CONF'";
 advhost $LOCALHOST $DIR >> $CONFD$CONF;
 
-echo "Uspešno kreirane stavke.";
+echo "Success.";
 echo " ";
 
-echo "Da li da skript startuje XAMPP?";
 
-a=0;
-while [ ! $a -eq 1 ]; do
+echo "restarting apache, in order for changes to take effect";
+$XAMPPEXE reloadapache 2>/dev/null
 
-	read -p "da ili ne: " answer
+#echo "Should we start XAMPP?";
 
-	if [ "$answer" == "da" ]; then
-
-		res=`$XAMPPEXE start 2>/dev/null`
-		echo "$res";
-
-		if [ $? -eq 0 ]; then
-			echo "XAMPP uspešno startovan";
-		else
-			# !!! trenutno nevalidno. $XAMPPEXE prosledjuje gresku u /dev/null 
-			echo "dogodila se greška prilikom startovanja XAMPP-a";
-			exit 1;
-		fi
-		exit 0;
-	elif [ "$answer" == "ne" ]; then
-		echo "Kraj skripte.";
-		exit 0;
-	else
-		echo "isključivo 'da' ili 'ne'"
-	fi
-done
-
+#a=0;
+#while [ ! $a -eq 1 ]; do
+#
+#	read -p "yes or no: " answer
+#
+#	if [ "$answer" == "yes" ]; then
+#
+#		res=`$XAMPPEXE start 2>/dev/null`
+#		echo "$res";
+#
+#		if [ $? -eq 0 ]; then
+#			echo "XAMPP started";
+#		else
+#			# !!! Invalid error catch. XAMPP sends error messages to > /dev/null 
+#			echo "Error encountered when trying to start XAMPP";
+#			exit 1;
+#		fi
+#		exit 0;
+#	elif [ "$answer" == "ne" ]; then
+#		echo "End script.";
+#		exit 0;
+#	else
+#		echo "Exclusively 'yes' or 'no'"
+#	fi
+#done
+#
