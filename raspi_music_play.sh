@@ -1,8 +1,12 @@
 #!/bin/bash
 
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++
-#Play mp3 music within a folder as if from a playlist
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++#
+#               raspi_music_play.sh                    #
+# Play mp3 music within a folder as if from a playlist #
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++#
+#  Only for Raspberry Pi computers since omxplayer is  #
+#           available only on Raspberry Pi             # 
+#------------------------------------------------------#
 
 
 IFS='
