@@ -32,6 +32,9 @@ echo "
     DocumentRoot \"$2\"
     ServerName $1
     <Directory \"$2\">
+   	Options Indexes FollowSymLinks Includes ExecCGI
+	AllowOverride all
+	Order deny,allow
         Require all granted
     </Directory>
 </VirtualHost>
