@@ -7,6 +7,8 @@
 #  Only for Raspberry Pi computers since omxplayer is  #
 #           available only on Raspberry Pi             # 
 #------------------------------------------------------#
+# author: Marko Pantelic                               #
+#------------------------------------------------------#
 
 
 IFS='

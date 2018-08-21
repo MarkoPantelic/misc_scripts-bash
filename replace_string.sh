@@ -5,6 +5,8 @@
 #					     #
 # Script to replace stringA with string2 in  #
 # one file or files in specified directory   #
+#--------------------------------------------#
+# author: Marko Pantelic                     #
 #============================================#
 
 

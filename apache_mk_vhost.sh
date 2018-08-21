@@ -2,7 +2,7 @@
 
 #============================================================
 #
-# Script which creates Apache vhost entry  for 'non-ip vhost'
+# Script which creates Apache vhost entry for 'non-ip vhost'
 # and creates /etc/hosts entry
 #
 # author: Marko Pantelic
@@ -32,9 +32,9 @@ echo "
     DocumentRoot \"$2\"
     ServerName $1
     <Directory \"$2\">
-   		Options Indexes FollowSymLinks Includes ExecCGI
-		AllowOverride all
-		Order deny,allow
+        Options Indexes FollowSymLinks Includes ExecCGI
+        AllowOverride all
+        Order deny,allow
         Require all granted
     </Directory>
 </VirtualHost>
@@ -59,7 +59,7 @@ fi
 if [ $# -lt 2 ]; then
 	echo "'$0' script requires two arguments (arg1 localhost, arg2 directory path):";
 	echo "Example:";
-	echo "./mkvhost.sh projekat1.localhost /home/backend-prepodne/Desktop/workspace.php/projekat1";
+	echo "$0 project.localhost /path/to/some/folder/";
 	exit 1;
 fi
 

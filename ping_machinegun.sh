@@ -6,6 +6,7 @@
 #
 #  Bash multi-ping script #
 #
+# author: Marko Pantelic
 #=========================#
 
 

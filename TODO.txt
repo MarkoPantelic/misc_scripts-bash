@@ -20,3 +20,10 @@ REPLACE_STRING:
 path e.g. './local/config'
 -Add different replacing modes (e.g. mode where stringA is replaced even when it's part of a larger string) 
 ==============================================================================================================
+
+
+==============================================================================================================
+APACHE_MK_VHOST
+
+- check if path has sufficient permissions for apache web server to access it
+==============================================================================================================

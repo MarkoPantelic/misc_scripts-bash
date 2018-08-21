@@ -1,15 +1,20 @@
 #!/bin/bash
 
-#==========================================
+#==================================================
 #
 #           CHANGE KEYBOARD LANG
 #
-#==========================================
-# requires setkbmap installed
+#==================================================
+# Change keyboard language quickly from the console 
+#--------------------------------------------------
+# Requires setkxbmap.
 # Name of the script is intentionally '_1',
-# because it allows execution when using
-# cyrillic input or other ackward alphabets
-#==========================================
+# because it allows for this script to be called 
+# from the console when cyrillic input is set 
+# (or some other non-latin alphabet).
+#--------------------------------------------------
+# author: Marko Pantelic
+#==================================================
 
 keyboard_lang="us"
 lang_arg="us"
