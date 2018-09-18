@@ -3,7 +3,7 @@
 #============================================#
 #		REPLACE STRING		     #
 #					     #
-# Script to replace stringA with string2 in  #
+# Script to replace stringA with stringB in  #
 # one file or files in specified directory   #
 #--------------------------------------------#
 # author: Marko Pantelic                     #
