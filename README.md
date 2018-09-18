@@ -13,3 +13,4 @@ Misc bash scripts
 * move.sh - move files from one directory to another according to given regex
 * raspi_music_play.sh - play music sequentialy from a folder, using raspberry pi omxplayer
 * mkctemplate.sh - create '.c' template file
+* laravel_setup.sh - setup laravel project. -> install, set file permissions, create .env file, generate app key...
