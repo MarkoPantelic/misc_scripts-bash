@@ -118,7 +118,7 @@ if [ $SETUP -eq 1 ]; then
 	# if .env isn't created, this script creates it from .env.example and then calls php artisan key:generate
 	if [ ! -f "${PROJECT_PATH}/.env" ]; then
 		echo "$PROG_NAME: Laravel environment file not found. Creating '.env'";
-		cp ${PROJECT_PATH}/.env.example ${PROJECT_PATH}/.env;
+		cp "${PROJECT_PATH}/.env.example" "${PROJECT_PATH}/.env";
 
 		echo "$PROG_NAME: generating Laravel application key";
 		php "${PROJECT_PATH}/artisan" key:generate;
@@ -152,6 +152,7 @@ fi
 
 if [ $SET_PERMISSIONS -eq 1 ]; then
 	echo "$PROG_NAME: setting Laravel's subdirectories permissions";
+	chmod 777 "$LARAVEL_PROJ_DIR";
 	chmod -R 777 "$LARAVEL_PROJ_DIR/app" "$LARAVEL_PROJ_DIR/storage" "$LARAVEL_PROJ_DIR/bootstrap/cache";
 
 	if [ $? -eq 0 ]; then
