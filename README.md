@@ -2,8 +2,6 @@
 
 Misc bash scripts
 
-* Author: Marko Pantelić (Марко Пантелић) marko_pantelic@mail.com
-
 ### List ###
 
 * apache_mk_vhost.sh - Create apache vhost and /etc/hosts host 
