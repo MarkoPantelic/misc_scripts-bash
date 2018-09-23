@@ -28,14 +28,16 @@ SETUP=0; # flag to encompass all actions except install
 MYSQL_STRING_MAX_HACK=0;
 SET_PERMISSIONS=0;
 
+TOTAL_SUCCESS=1;
+
 LARAVEL_VERSION=''; # e.g. '~5.6' or ':5.6.0'
 
 
 
 # CHECK SCRIPT REQUIRED ARGUMENTS
 if [ $# -eq 0 ]; then
-	echo "usage:\n$0 laravel_path action";
-	echo "actions: install, setup"; # add later set_permissions, mysql_string_hack
+	echo -e "usage:\n$0 laravel_path action";
+	echo "(actions: install, setup)"; # add later set_permissions, mysql_string_hack
 	exit 1;
 elif [ $# -lt 2 ]; then
 	echo "$PROG_NAME: script requires two arguments (arg1 laravel_path, arg2 action):";
@@ -109,19 +111,29 @@ if [ $INSTALL -eq 1 ]; then
 		
 		if [ $? -ne 0 ]; then
 			echo "$PROG_NAME: FAILED installation of Laravel! composer returned error signal";
+			exit 1;
 		fi
 	fi
 fi # end if [ INSTALL ...
 
 
 if [ $SETUP -eq 1 ]; then
+
 	# if .env isn't created, this script creates it from .env.example and then calls php artisan key:generate
 	if [ ! -f "${PROJECT_PATH}/.env" ]; then
-		echo "$PROG_NAME: Laravel environment file not found. Creating '.env'";
-		cp "${PROJECT_PATH}/.env.example" "${PROJECT_PATH}/.env";
 
-		echo "$PROG_NAME: generating Laravel application key";
-		php "${PROJECT_PATH}/artisan" key:generate;
+		#if .env.example exists
+		if [ -f "${PROJECT_PATH}/.env.example" ]; then
+			echo "$PROG_NAME: Laravel environment file not found. Creating '.env'";
+			cp "${PROJECT_PATH}/.env.example" "${PROJECT_PATH}/.env";
+
+			echo "$PROG_NAME: generating Laravel application key";
+			php "${PROJECT_PATH}/artisan" key:generate;
+		else 
+			echo "$PROG_NAME: NOTE! Nonexistant '.env.example'. Cannot create '.env' and generate application key";
+			TOTAL_SUCCESS=0;
+		fi
+
 	else
 		echo "$PROG_NAME: .env file already present.";
 	fi
@@ -159,6 +171,7 @@ if [ $SET_PERMISSIONS -eq 1 ]; then
 		echo "$PROG_NAME: chmod completed";
 	else
 		echo "$PROG_NAME: NOTE! couldn't chmod freely. You have inadequate privileges?";
+		TOTAL_SUCCESS=0;
 		echo "$PROG_NAME: ending script.";
 		exit 1;
 	fi
@@ -174,6 +187,10 @@ if [ $MYSQL_STRING_MAX_HACK -eq 1 ]; then
 		' "$LARAVEL_PROJ_DIR/app/Providers/AppServiceProvider.php"
 fi
 
+if [ $TOTAL_SUCCESS -eq 1 ]; then
+	echo "$PROG_NAME: script successful completion.";
+	exit 0;
+fi
 
-echo "$PROG_NAME: script successful completion.";
-exit 0;
+echo "$PROG_NAME: End script. NOTE: All actions were NOT completed. Check messages above.";
+exit 1;
